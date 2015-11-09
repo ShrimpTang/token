@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body ng-controller="MainCtrl as vm">
+<h1>Get random user</h1>
+
+<h1 ng-show="vm.user">欢迎{{vm.user.username}}</h1>
+
+
+<div ng-hide="vm.user">
+    <form ng-submit="vm.login(vm.username,vm.password)">
+        用户名<input type="text" ng-model="vm.username"/><br/>
+        密码 <input type="password" ng-model="vm.password"/><br/>
+        <input type="submit" value="登陆"/>
+    </form>
+
+</div>
+<button ng-click="vm.logout()" ng-show="vm.user">退出</button>
+
+<div ng-show="vm.user">
+    <button ng-click="vm.getRandomUser()">Get User</button>
+    <pre ng-bind="vm.randomUser | json"></pre>
+
+
+</div>
+<script src="bower_components/angular/angular.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
