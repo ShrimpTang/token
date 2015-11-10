@@ -2,9 +2,10 @@
  * Created by ShrimpTang on 2015/11/9.
  */
 (function () {
-    var app = angular.module('myApp', []);
+    var app = angular.module('myApp');
     app.constant('API_URL', 'http://localhost:3000');
-    app.controller('MainCtrl', function (RandomUserFactory, UserFactory, AuthTokenFactory) {
+    app.controller('MainCtrl', function (RandomUserFactory, UserFactory, AuthTokenFactory,yyyc) {
+        yyyc.y();
         var vm = this;
         UserFactory.getUser().then(function (res) {
             vm.user=res.data;
@@ -12,6 +13,11 @@
         vm.getRandomUser = function () {
             RandomUserFactory.getUser().then(function (res) {
                 vm.randomUser = res.data;
+            }, function (res) {
+                AuthTokenFactory.setToken();
+                vm.user=null;
+                alert('请登陆');
+
             });
         };
         vm.login = function (username, password) {
@@ -88,9 +94,13 @@
                         config.headers.Authorization = 'Bearer ' + AuthTokenFactory.getToken();
                     }
                     return config;
+                },requestError: function (rejectReason) {
+                    console.info(rejectReason);
+                },responseError: function (res) {
+                    console.info(res);
+
                 }
             }
         })
     }]);
-
 })();

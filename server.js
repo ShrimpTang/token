@@ -7,18 +7,22 @@ var cors = require('cors');
 var bodyParser = require('body-parser');
 var jwt = require("jsonwebtoken");
 var expressJwt = require("express-jwt");
+
 var user = {
     username: '11',
     password: '11'
 };
 
-var jwtSecret = 'klgrfgvre//gervgfvgr/gbvcze23d/ooo'
+var jwtSecret = 'klgrfgvre//gervgfvgr/gbvcze23d/ooo';
 var app = express();
 app.use(cors());
 app.use(bodyParser.json());
+
 app.use(expressJwt({
     secret: jwtSecret
 }).unless({path: ['/login']}));
+
+
 app.get('/random-user', function (req, res) {
     console.info(req.user);
     var user = faker.helpers.userCard();
@@ -29,7 +33,7 @@ app.get('/random-user', function (req, res) {
 app.post('/login', authenticate, function (req, res) {
     var token = jwt.sign({
         username: user.username
-    }, jwtSecret);
+    }, jwtSecret);//,{expiresIn:'10s'}
     res.send({
         token: token,
         user: user
@@ -55,3 +59,8 @@ function authenticate(req, res, next) {
     }
     next();
 }
+app.use(function (err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+        res.send(401, 'invalid token...');
+    }
+});
